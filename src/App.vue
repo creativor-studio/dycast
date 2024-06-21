@@ -42,7 +42,7 @@ const printSKMCJ = function () {
   console.log(`%c${info}`, `color: #dc6b82`);
 };
 setTimeout(() => {
-  console.clear();
+  //console.clear();
   printSKMCJ();
   printInfo();
 }, 1500);

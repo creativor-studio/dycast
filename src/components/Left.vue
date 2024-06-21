@@ -16,7 +16,16 @@
         <div class="dy-room-tag">ws地址</div>
         <input v-model="relayWs" type="text" class="dy-room-input" placeholder="请输入ws/wss协议链接" />
         <button class="dy-room-btn" @click="relay">转发</button>
+         <span
+          class="state"
+          :class="{
+            success: isWebsocketConnected(),
+            fail: isWebsocketConnected() === false
+          }"
+          >{{ isWebsocketConnected() ? '✅已连接' : '🚫未连接' }}</span
+        >
       </div>
+      <div class="dy-title">转发信息</div>
       <div class="dy-title">
         <span>房间信息</span>
         <span
@@ -26,7 +35,7 @@
             success: connectCode === 200,
             fail: connectCode === 400
           }"
-          >{{ connectCode === 200 ? '连接成功' : '连接失败' }}</span
+          >{{ connectCode === 200 ? '🟢连接成功' : '🔴连接失败' }}</span
         >
       </div>
       <div class="dy-room-info" v-if="connectCode !== 100">
@@ -61,9 +70,9 @@ import { getRoomInfoApi } from '@/api/commonApi';
 import { ref, inject, onMounted, type Ref } from 'vue';
 
 // 房间号
-const roomNum = ref<string | null>(null);
+const roomNum = ref<string | null>('916524746388');
 
-const relayWs = ref<string>('');
+const relayWs = ref<string>('ws://127.0.0.1:8765');
 // 弹幕列表
 const chatList = inject<Mess[]>('chatList');
 // 点赞送礼榜
@@ -103,6 +112,15 @@ let messListDom: HTMLElement | null;
 onMounted(() => {
   messListDom = document.getElementById('mess-list');
 });
+
+/**
+ * 判断WebSocket是否连接成功
+ *
+ * @returns 如果WebSocket连接成功则返回true，否则返回false
+ */
+function isWebsocketConnected() {
+  return relaySocket && relaySocket.readyState === 1;
+}
 
 /**
  * 连接直播间
@@ -162,6 +180,7 @@ function connection(roomId: string, uniqueId: string) {
     if (message) {
       let m = handleMessage(message);
       handleChat(m);
+      //console.log("接收到消息:", m);
       renewPos();
       relayMess(m);
     }
