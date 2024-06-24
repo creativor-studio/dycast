@@ -72,7 +72,7 @@ import { ref, inject, onMounted, type Ref } from 'vue';
 // 房间号
 const roomNum = ref<string | null>('916524746388');
 
-const relayWs = ref<string>('ws://127.0.0.1:8765');
+const relayWs = ref<string>('ws://'+window.location.hostname+':8765');
 // 弹幕列表
 const chatList = inject<Mess[]>('chatList');
 // 点赞送礼榜
