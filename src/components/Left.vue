@@ -73,6 +73,10 @@ import { ref, inject, onMounted, type Ref } from 'vue';
 const roomNum = ref<string | null>('916524746388');
 
 const relayWs = ref<string>('ws://'+window.location.hostname+':8765');
+/**
+ *  WebSocket 重连间隔时间（毫秒）
+ */
+const WS_RECONNECT_INTERVAL = 5000; 
 // 弹幕列表
 const chatList = inject<Mess[]>('chatList');
 // 点赞送礼榜
@@ -111,6 +115,8 @@ let messListDom: HTMLElement | null;
 
 onMounted(() => {
   messListDom = document.getElementById('mess-list');
+  //加载完毕就连接websocket
+  relay();
 });
 
 /**
@@ -158,10 +164,24 @@ function gotoConnect() {
 }
 
 /**
- * 转发消息
+ * 连接Websocket服务
  */
 function relay() {
   relaySocket = new WebSocket(relayWs.value);
+
+  relaySocket.onopen = function(event) {
+      console.log("Connected to WebSocket server.");
+  };
+
+  relaySocket.onclose = function(event) {
+      console.log("WebSocket connection closed. Attempting to reconnect in " + WS_RECONNECT_INTERVAL / 1000 + " seconds.");
+      setTimeout(relay, WS_RECONNECT_INTERVAL);
+  };
+
+  relaySocket.onerror = function(event) {
+      console.error("WebSocket error:", event);
+      relaySocket.close();
+  };
 }
 
 /**
