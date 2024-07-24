@@ -2,11 +2,9 @@
   <div class="l-box">
     <div class="dy-form">
       <div class="dy-title">房间信息</div>
-      <div
-        class="dy-room-box"
-        :class="{
-          error: rnFlag
-        }">
+      <div class="dy-room-box" :class="{
+        error: rnFlag
+      }">
         <div class="dy-room-tag">房间号</div>
         <input v-model="roomNum" type="text" class="dy-room-input" placeholder="请输入12位房间号" />
         <button class="dy-room-btn" @click="gotoConnect">连接</button>
@@ -16,27 +14,18 @@
         <div class="dy-room-tag">ws地址</div>
         <input v-model="relayWs" type="text" class="dy-room-input" placeholder="请输入ws/wss协议链接" />
         <button class="dy-room-btn" @click="relay">转发</button>
-         <span
-          class="state"
-          :class="{
-            success: isWebsocketConnected(),
-            fail: isWebsocketConnected() === false
-          }"
-          >{{ isWebsocketConnected() ? '✅已连接' : '🚫未连接' }}</span
-        >
+        <span class="state" :class="{
+          success: isWebsocketConnected(),
+          fail: isWebsocketConnected() === false
+        }">{{ isWebsocketConnected() ? '✅已连接' : '🚫未连接' }}</span>
       </div>
       <div class="dy-title">转发信息</div>
       <div class="dy-title">
         <span>房间信息</span>
-        <span
-          v-if="connectCode !== 100"
-          class="state"
-          :class="{
-            success: connectCode === 200,
-            fail: connectCode === 400
-          }"
-          >{{ connectCode === 200 ? '🟢连接成功' : '🔴连接失败' }}</span
-        >
+        <span v-if="connectCode !== 100" class="state" :class="{
+          success: connectCode === 200,
+          fail: connectCode === 400
+        }">{{ connectCode === 200 ? '🟢连接成功' : '🔴连接失败' }}</span>
       </div>
       <div class="dy-room-info" v-if="connectCode !== 100">
         <div class="title-box">
@@ -72,11 +61,11 @@ import { ref, inject, onMounted, type Ref } from 'vue';
 // 房间号
 const roomNum = ref<string | null>('916524746388');
 
-const relayWs = ref<string>('ws://'+window.location.hostname+':8765');
+const relayWs = ref<string>('ws://' + window.location.hostname + ':8765');
 /**
  *  WebSocket 重连间隔时间（毫秒）
  */
-const WS_RECONNECT_INTERVAL = 5000; 
+const WS_RECONNECT_INTERVAL = 5000;
 // 弹幕列表
 const chatList = inject<Mess[]>('chatList');
 // 点赞送礼榜
@@ -169,18 +158,18 @@ function gotoConnect() {
 function relay() {
   relaySocket = new WebSocket(relayWs.value);
 
-  relaySocket.onopen = function(event) {
-      console.log("Connected to WebSocket server.");
+  relaySocket.onopen = function (event: Event) {
+    console.log("Connected to WebSocket server.");
   };
 
-  relaySocket.onclose = function(event) {
-      console.log("WebSocket connection closed. Attempting to reconnect in " + WS_RECONNECT_INTERVAL / 1000 + " seconds.");
-      setTimeout(relay, WS_RECONNECT_INTERVAL);
+  relaySocket.onclose = function (event: Event) {
+    console.log("WebSocket connection closed. Attempting to reconnect in " + WS_RECONNECT_INTERVAL / 1000 + " seconds.");
+    setTimeout(relay, WS_RECONNECT_INTERVAL);
   };
 
-  relaySocket.onerror = function(event) {
-      console.error("WebSocket error:", event);
-      relaySocket.close();
+  relaySocket.onerror = function (event: Event) {
+    console.error("WebSocket error:", event);
+    relaySocket.close();
   };
 }
 
@@ -277,6 +266,7 @@ function relayMess(data: Mess) {
   display: flex;
   padding: 24px 36px;
   flex-direction: column;
+
   .dy-title {
     position: relative;
     font-size: 18px;
@@ -284,19 +274,23 @@ function relayMess(data: Mess) {
     padding: 8px 5px;
     border-bottom: 1px solid #ccc;
     margin-bottom: 8px;
+
     .state {
       position: absolute;
       right: 12px;
       font-size: 16px;
       font-weight: normal;
+
       &.success {
         color: #98d98e;
       }
+
       &.fail {
         color: #f7315d;
       }
     }
   }
+
   .dy-room-box {
     max-width: 420px;
     height: 36px;
@@ -310,15 +304,18 @@ function relayMess(data: Mess) {
     margin: 12px 8px;
     margin-bottom: 24px;
     flex-shrink: 0;
+
     &.error {
       border-color: #fa5232;
     }
+
     .dy-room-tag {
       flex-shrink: 0;
       text-align: center;
       padding: 0 12px;
       box-sizing: border-box;
     }
+
     .dy-room-input {
       min-width: 114px;
       height: 100%;
@@ -330,6 +327,7 @@ function relayMess(data: Mess) {
       border: none;
       padding: 0;
     }
+
     .dy-room-btn {
       cursor: pointer;
       user-select: none;
@@ -343,21 +341,25 @@ function relayMess(data: Mess) {
       background-color: #a9b7c2;
     }
   }
+
   .dy-room-info {
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
     padding: 12px 8px;
+
     .title-box {
       display: flex;
       align-items: center;
       margin: 12px 0;
+
       img {
         border-radius: 50%;
         width: 64px;
         height: 64px;
         border: 1px solid #ccc;
       }
+
       span {
         margin-left: 12px;
         font-size: 16px;
@@ -365,16 +367,20 @@ function relayMess(data: Mess) {
         color: #8b968d;
       }
     }
+
     .info-item {
       font-size: 14px;
       font-weight: bold;
-      & + .info-item {
+
+      &+.info-item {
         margin-top: 8px;
       }
+
       .tit {
         margin-right: 12px;
         color: #333631;
       }
+
       .text {
         color: #9e9478;
       }
