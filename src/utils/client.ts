@@ -155,6 +155,7 @@ interface Mess {
   id: number;
   type: string | undefined;
   content: string;
+  user: object;
   nickname: string;
   /**
    * 在线观众
@@ -207,6 +208,7 @@ export const handleMessage = function (message: proto.Message) {
   let chat: Mess = {
     id: 0,
     type: undefined,
+    user: {},
     nickname: '',
     content: '',
     memberCount: 0,
@@ -227,7 +229,9 @@ export const handleMessage = function (message: proto.Message) {
       data = proto.MemberMessage.deserializeBinary(message.getPayload());
       // membercount - 直播间人数， user.nickname
       chat.type = 'member';
-      chat.nickname = data.getUser().getNickname();
+      var user = data.getUser();
+      chat.user = user.toObject();
+      chat.nickname = user.getNickname();
       chat.content = '来了';
       chat.memberCount = data.getMembercount();
       break;
@@ -235,7 +239,9 @@ export const handleMessage = function (message: proto.Message) {
     case 'WebcastSocialMessage':
       data = proto.SocialMessage.deserializeBinary(message.getPayload());
       chat.type = 'social';
-      chat.nickname = data.getUser().getNickname();
+      var user = data.getUser();
+      chat.user = user.toObject();
+      chat.nickname = user.getNickname();
       chat.content = '关注了主播';
       chat.followCount = data.getFollowcount();
       break;
@@ -243,14 +249,18 @@ export const handleMessage = function (message: proto.Message) {
     case 'WebcastChatMessage':
       data = proto.ChatMessage.deserializeBinary(message.getPayload());
       chat.type = 'chat';
-      chat.nickname = data.getUser().getNickname();
+      var user = data.getUser();
+      chat.user = user.toObject();
+      chat.nickname = user.getNickname();
       chat.content = data.getContent();
       break;
     // 点赞
     case 'WebcastLikeMessage':
       data = proto.LikeMessage.deserializeBinary(message.getPayload());
       chat.type = 'like';
-      chat.nickname = data.getUser().getNickname();
+      var user = data.getUser();
+      chat.user = user.toObject();
+      chat.nickname = user.getNickname();;
       chat.content = '为主播点赞了';
       chat.likeCount = data.getTotal();
       break;
@@ -271,7 +281,9 @@ export const handleMessage = function (message: proto.Message) {
       //   describe: data.getCommon().getDescribe(),
       //   commonCreateTime: data.getCommon().getCreatetime()
       // });
-      chat.nickname = data.getUser().getNickname();
+      var user = data.getUser();
+      chat.user = user.toObject();
+      chat.nickname = user.getNickname();
       chat.content = data.getCommon().getDescribe();
       chat.gift.name = data.getGift().getName();
       chat.gift.desc = data.getGift().getDescribe();
