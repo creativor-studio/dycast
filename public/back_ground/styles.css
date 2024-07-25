@@ -1,0 +1,45 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    color: #fff;
+    background: linear-gradient(135deg, #000000, #000b14, #17011a);
+}
+
+.container {
+    height: 100vh;
+    width: 100%;
+}
+
+
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    animation: fadeInUp 1s ease forwards;
+}
+
+
+
+canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+}
+
+.fade-in-initial {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+}
