@@ -58,8 +58,23 @@ import { DyClient, handleMessage } from '../utils/client';
 import { getRoomInfoApi } from '@/api/commonApi';
 import { ref, inject, onMounted, type Ref } from 'vue';
 
+function getQueryValueByName(name: string) {
+  var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i')
+  var r = window.location.search.substr(1).match(reg)
+  if (r != null) return unescape(r[2])
+  return null
+}
+
+// 默认房间号
+const DEFAULT_ROOM_ID = "916524746388";
+// 房间号, 可以从url的查询参数“id”中获取
+var roomID = getQueryValueByName('id');
+if (roomID === null) {
+  roomID = DEFAULT_ROOM_ID;
+}
+
 // 房间号
-const roomNum = ref<string | null>('916524746388');
+const roomNum = ref<string | null>(roomID);
 
 const relayWs = ref<string>('ws://' + window.location.hostname + ':8765');
 /**
@@ -102,8 +117,11 @@ let relaySocket: any;
 // 消息列表DOM
 let messListDom: HTMLElement | null;
 
+
 onMounted(() => {
   messListDom = document.getElementById('mess-list');
+  //加载完毕就连接直播间
+  gotoConnect();
   //加载完毕就连接websocket
   relay();
 });
