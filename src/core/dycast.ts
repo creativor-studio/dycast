@@ -435,7 +435,7 @@ export class DyCast {
     this.lastReceiveTime = Date.now();
     // 当前客户端状态
     this.wsRoomStatus = WSRoomStatus.UNCONNECTED;
-    this.shouldReconnect = !1;
+    this.shouldReconnect = true; // 默认需要重连
     /**
      * 默认情况
      *  - 即未收到预期的状态码
@@ -644,7 +644,7 @@ export class DyCast {
     if (this.ws && this.ws.readyState === WebSocket.OPEN) {
       this.close(DyCastCloseCode.RECONNECTING, '因重连而关闭');
     }
-    this.shouldReconnect = !1;
+    //this.shouldReconnect = !1; // IGNORE ---
     const opts: DyCastOptions = Object.assign({}, this.options, {
       cursor: this.cursor.cursor,
       internal_ext: this.cursor.internalExt
