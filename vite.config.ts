@@ -17,6 +17,7 @@ export default defineConfig({
   },
   server: {
     host: '0.0.0.0', // 允许局域网访问
+    hmr: false, // 禁用 HMR 热更新，防止网页自动刷新导致 WebSocket 断开
     proxy: {
       '/dylive': {
         target: 'https://live.douyin.com',
