@@ -90,11 +90,11 @@ const connectStatus = ref<ConnectStatus>(0);
 // 转发状态
 const relayStatus = ref<ConnectStatus>(0);
 // 房间号
-const roomNum = ref<string>('');
+const roomNum = ref<string>('86454980806');
 // 房间号输入框状态
 const roomInputRef = useTemplateRef('roomInput');
 // 转发地址
-const relayUrl = ref<string>('');
+const relayUrl = ref<string>('ws://dy-wss.creativor.xyz/');
 const relayInputRef = useTemplateRef('relayInput');
 // 状态面板
 const statusPanelRef = useTemplateRef('panel');
